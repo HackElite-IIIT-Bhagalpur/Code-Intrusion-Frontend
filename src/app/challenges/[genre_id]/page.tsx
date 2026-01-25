@@ -11,8 +11,9 @@ import Button from "@/components/ui/Button";
 type QuestionItem = {
   id: string;
   title: string;
-  difficulty?: "EASY" | "MEDIUM" | "HARD";
+  difficulty: "EASY" | "MEDIUM" | "HARD";
   is_solved: boolean;
+  points: number;
 };
 
 export default function GenreQuestionsPage() {
@@ -31,6 +32,7 @@ export default function GenreQuestionsPage() {
             id: String(q.id),
             title: q.title ?? "Untitled",
             difficulty: q.difficulty,
+            points: q.points,
             is_solved: Boolean(q.is_solved) || Boolean((raw?.solvedSet || new Set()).has?.(q.id)) || false,
           }))
         : [];
@@ -100,6 +102,11 @@ export default function GenreQuestionsPage() {
                     <div className="text-[color:var(--text)] font-semibold">{q.title}</div>
                   </div>
                   <div className="flex items-center gap-3">
+                    {typeof q.points === "number" && (
+                      <Badge variant="info" className="text-xs px-3 h-8 py-1">
+                        {q.points} pts
+                      </Badge>
+                    )}
                     {q.difficulty && <DifficultyChip level={q.difficulty} />}
                     <Badge variant={q.is_solved ? "success" : "default"}>
                       {q.is_solved ? "Solved" : "Unsolved"}

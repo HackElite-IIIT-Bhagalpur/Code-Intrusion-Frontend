@@ -12,6 +12,7 @@ type Question = {
   id: string;
   title: string;
   description: string;
+  points?: number;
   difficulty?: "EASY" | "MEDIUM" | "HARD";
   is_solved: boolean;
 };
@@ -85,7 +86,12 @@ export default function QuestionPage() {
             </Button>
             <h1 className="text-4xl font-bold text-[color:var(--text)]">{question.title}</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            {typeof question.points === "number" && (
+              <Badge variant="info" className="text-xs px-3 h-8 py-1">
+                {question.points} pts
+              </Badge>
+            )}
             {question.difficulty && <DifficultyChip level={question.difficulty} />}
             <Badge variant={question.is_solved ? "success" : "default"} className="text-base px-4 py-2">
               {question.is_solved ? "✓ Solved" : "Unsolved"}
