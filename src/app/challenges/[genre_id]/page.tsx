@@ -5,11 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import api from "@/lib/api";
 import Card, { CardBody, CardHeader } from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
+import DifficultyChip from "@/components/ui/DifficultyChip";
 import Button from "@/components/ui/Button";
 
 type QuestionItem = {
   id: string;
   title: string;
+  difficulty?: "EASY" | "MEDIUM" | "HARD";
   is_solved: boolean;
 };
 
@@ -28,6 +30,7 @@ export default function GenreQuestionsPage() {
         ? items.map((q: any) => ({
             id: String(q.id),
             title: q.title ?? "Untitled",
+            difficulty: q.difficulty,
             is_solved: Boolean(q.is_solved) || Boolean((raw?.solvedSet || new Set()).has?.(q.id)) || false,
           }))
         : [];
@@ -93,8 +96,11 @@ export default function GenreQuestionsPage() {
             {questions.map((q) => (
               <Card key={q.id} variant="bordered" className="border-[color:var(--border)]">
                 <CardHeader className="flex items-center justify-between cursor-pointer hover:bg-[color:var(--surface)]/50 transition-colors" onClick={() => router.push(`/challenges/${genreId}/${q.id}`)}>
-                  <div className="text-[color:var(--text)] font-semibold">{q.title}</div>
+                  <div className="flex gap-1">
+                    <div className="text-[color:var(--text)] font-semibold">{q.title}</div>
+                  </div>
                   <div className="flex items-center gap-3">
+                    {q.difficulty && <DifficultyChip level={q.difficulty} />}
                     <Badge variant={q.is_solved ? "success" : "default"}>
                       {q.is_solved ? "Solved" : "Unsolved"}
                     </Badge>

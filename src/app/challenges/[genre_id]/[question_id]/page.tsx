@@ -6,11 +6,13 @@ import api from "@/lib/api";
 import Card, { CardBody, CardHeader } from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import DifficultyChip from "@/components/ui/DifficultyChip";
 
 type Question = {
   id: string;
   title: string;
   description: string;
+  difficulty?: "EASY" | "MEDIUM" | "HARD";
   is_solved: boolean;
 };
 
@@ -23,7 +25,8 @@ export default function QuestionPage() {
     queryKey: ["question", question_id],
     queryFn: async () => {
       const res = await api.get(`/question/${question_id}`);
-      return res.data;
+      const payload = res.data;
+      return payload?.data ?? payload;
     },
     enabled: Boolean(question_id),
     retry: 2,
@@ -82,9 +85,12 @@ export default function QuestionPage() {
             </Button>
             <h1 className="text-4xl font-bold text-[color:var(--text)]">{question.title}</h1>
           </div>
-          <Badge variant={question.is_solved ? "success" : "default"} className="text-base px-4 py-2">
-            {question.is_solved ? "✓ Solved" : "Unsolved"}
-          </Badge>
+          <div className="flex gap-2">
+            {question.difficulty && <DifficultyChip level={question.difficulty} />}
+            <Badge variant={question.is_solved ? "success" : "default"} className="text-base px-4 py-2">
+              {question.is_solved ? "✓ Solved" : "Unsolved"}
+            </Badge>
+          </div>
         </div>
 
         {/* Question Card */}
@@ -92,7 +98,6 @@ export default function QuestionPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-[color:var(--text)]">Question Details</h2>
-              <span className="text-sm text-[color:var(--muted)]">ID: {question.id}</span>
             </div>
           </CardHeader>
           <CardBody className="space-y-6">
