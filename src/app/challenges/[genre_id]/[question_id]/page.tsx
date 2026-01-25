@@ -1,12 +1,14 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import api from "@/lib/api";
 import Card, { CardBody, CardHeader } from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import DifficultyChip from "@/components/ui/DifficultyChip";
+import Input from "@/components/ui/Input";
 
 type Question = {
   id: string;
@@ -21,6 +23,10 @@ export default function QuestionPage() {
   const params = useParams<{ genre_id: string; question_id: string }>();
   const router = useRouter();
   const { genre_id, question_id } = params || {};
+  const queryClient = useQueryClient();
+
+  const [flag, setFlag] = useState("");
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   const { data: question, isLoading, error } = useQuery<Question>({
     queryKey: ["question", question_id],
@@ -32,7 +38,28 @@ export default function QuestionPage() {
     enabled: Boolean(question_id),
     retry: 2,
   });
-  let challenge_id = question_id
+  let challenge_id = question_id;
+
+  const submitFlagMutation = useMutation<{ is_correct: boolean }, Error, void>({
+    mutationFn: async () => {
+      if (!question_id) throw new Error("Missing question id");
+      const res = await api.post(`/question/${question_id}/flag`, { flag });
+      return res.data as { is_correct: boolean };
+    },
+    onSuccess: (data) => {
+      if (data?.is_correct) {
+        setFeedback("Correct flag! Challenge solved.");
+        setFlag("");
+        queryClient.invalidateQueries({ queryKey: ["question", question_id] });
+        queryClient.invalidateQueries({ queryKey: ["genre-questions", genre_id] });
+      } else {
+        setFeedback("Incorrect flag. Try again.");
+      }
+    },
+    onError: () => {
+      setFeedback("Something went wrong while submitting the flag.");
+    },
+  });
 
   if (!question_id) {
     return (
@@ -115,10 +142,24 @@ export default function QuestionPage() {
             </div>
 
             {!question.is_solved && (
-              <div className="mt-8 pt-6 border-t border-[color:var(--border)]">
-                <Button className="w-full">
-                  Solve Challenge
+              <div className="mt-8 pt-6 border-t border-[color:var(--border)] space-y-4">
+                <Input
+                  label="Submit Flag"
+                  placeholder="flag{...}"
+                  value={flag}
+                  onChange={(e) => setFlag(e.target.value)}
+                  disabled={submitFlagMutation.isPending}
+                />
+                <Button
+                  className="w-full"
+                  onClick={() => submitFlagMutation.mutate()}
+                  disabled={!flag.trim() || submitFlagMutation.isPending}
+                >
+                  {submitFlagMutation.isPending ? "Submitting..." : "Submit Flag"}
                 </Button>
+                {feedback && (
+                  <p className="text-sm text-center text-[color:var(--muted)]">{feedback}</p>
+                )}
               </div>
             )}
 
