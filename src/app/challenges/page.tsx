@@ -11,14 +11,15 @@ import type { Genre } from "@/types";
 import clsx from "clsx";
 
 export default function ChallengesPage() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, hasHydrated } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
+    if (!hasHydrated) return;
     if (!isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [hasHydrated, isAuthenticated, router]);
   const { data: genreRaw, isLoading: genreLoading, error } = useQuery<
     Genre[] | { data?: Genre[]; genres?: Genre[] }
   >({
@@ -39,6 +40,10 @@ export default function ChallengesPage() {
     : Array.isArray(genreRaw?.data)
     ? genreRaw.data
     : [];
+
+  if (!hasHydrated) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return null;

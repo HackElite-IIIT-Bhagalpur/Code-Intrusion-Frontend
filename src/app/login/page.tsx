@@ -9,7 +9,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Card, { CardBody, CardHeader } from "@/components/ui/Card";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type LoginForm = {
   email: string;
@@ -23,9 +23,15 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginForm>();
   const router = useRouter();
-  const { setUser, setToken } = useAuthStore();
+  const { setUser, setToken, hasHydrated, isAuthenticated } = useAuthStore();
   const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (isAuthenticated) {
+      router.push("/challenges");
+    }
+  }, [hasHydrated, isAuthenticated, router]);
   const mutation = useMutation({
     mutationFn: async (data: LoginForm) => {
       const res = await api.post("/auth/login", data);

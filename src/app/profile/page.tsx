@@ -16,10 +16,10 @@ export default function ProfilePage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    // if (!token) {
+    //   router.push("/login");
+    //   return;
+    // }
 
 
     if (!user) {
