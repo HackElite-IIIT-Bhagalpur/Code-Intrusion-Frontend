@@ -13,7 +13,7 @@ interface LeaderboardEntry {
   last_name: string;
   email?: string | null;
   points: number;
-  last_submission_timestamp?: string | null;
+  latest_submission_time?: string | null;
 }
 
 interface LeaderboardResponse {
@@ -90,6 +90,9 @@ export default function LeaderboardPage() {
                     <th className="px-6 py-3 text-center text-xs font-bold text-[color:var(--muted)] uppercase tracking-wider">
                       Points
                     </th>
+                    <th className="px-6 py-3 text-center text-xs font-bold text-[color:var(--muted)] uppercase tracking-wider">
+                      Last Solve
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-[color:var(--bg)] divide-y divide-[color:var(--border)]/70">
@@ -125,6 +128,11 @@ export default function LeaderboardPage() {
                         <span className="text-lg font-bold text-[color:var(--primary)]">
                           {currentUser?.points}
                         </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs text-[color:var(--muted)]">
+                        {currentUser?.latest_submission_time
+                          ? new Date(currentUser.latest_submission_time).toLocaleString()
+                          : "-"}
                       </td>
                     </tr>
                   )}
@@ -200,6 +208,11 @@ export default function LeaderboardPage() {
                           {entry?.points}
                         </span>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs text-[color:var(--muted)]">
+                        {entry.latest_submission_time
+                          ? new Date(entry.latest_submission_time).toLocaleString()
+                          : "-"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -238,6 +251,11 @@ export default function LeaderboardPage() {
                         {currentUser?.points} pts
                       </div>
                     </div>
+                    {currentUser?.latest_submission_time && (
+                      <div className="mt-2 text-[10px] text-[color:var(--muted)]">
+                        Last solve: {new Date(currentUser.latest_submission_time).toLocaleString()}
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               )}
@@ -279,6 +297,11 @@ export default function LeaderboardPage() {
                         {entry?.points} pts
                       </div>
                     </div>
+                    {entry.latest_submission_time && (
+                      <div className="mt-2 text-[10px] text-[color:var(--muted)]">
+                        Last solve: {new Date(entry.latest_submission_time).toLocaleString()}
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               ))}
