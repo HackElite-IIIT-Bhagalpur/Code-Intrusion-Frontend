@@ -40,7 +40,17 @@ export default function LoginPage() {
     onSuccess: (response) => {
       if (response.success && response.data?.token) {
         setToken(response.data.token);
-        router.push("/profile");
+        // Fetch profile immediately so navbar has user info right after login
+        api
+          .get("/user/profile")
+          .then((profileRes) => {
+            setUser(profileRes.data);
+            router.push("/challenges");
+          })
+          .catch(() => {
+            // Fallback: still navigate but without preloaded profile
+            router.push("/challenges");
+          });
       } else {
         setErrorMessage("Invalid response from server");
       }
