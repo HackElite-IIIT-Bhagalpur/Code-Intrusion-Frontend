@@ -108,7 +108,7 @@ export default function GenreQuestionsPage() {
                       </Badge>
                     )}
                     {q.difficulty && <DifficultyChip level={q.difficulty} />}
-                    <Badge variant={q.is_solved ? "success" : "default"}>
+                    <Badge variant={q.is_solved ? "success" : "default"} className="h-8">
                       {q.is_solved ? "Solved" : "Unsolved"}
                     </Badge>
                     <span className="text-[color:var(--primary)] text-xl">→</span>
