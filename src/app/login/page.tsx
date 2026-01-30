@@ -148,21 +148,6 @@ export default function LoginPage() {
                 Contact Admin
               </Link>
             </div>
-
-            {/* Demo Credentials Helper */}
-            <div className="mt-4 p-4 border border-[color:var(--border)] rounded-lg bg-[color:var(--surface)]/70">
-              <p className="text-sm font-semibold text-[color:var(--primary)] mb-2">
-                🔑 Demo Credentials (testing)
-              </p>
-              <div className="text-xs text-[color:var(--muted)] space-y-1">
-                <p>
-                  Email: <code className="bg-[color:var(--bg)] px-2 py-0.5 rounded text-[color:var(--text)] mono">admin@ctf.com</code>
-                </p>
-                <p>
-                  Password: <code className="bg-[color:var(--bg)] px-2 py-0.5 rounded text-[color:var(--text)] mono">password123</code>
-                </p>
-              </div>
-            </div>
           </CardBody>
         </Card>
 
