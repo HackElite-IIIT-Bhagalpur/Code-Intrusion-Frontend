@@ -14,10 +14,11 @@ type Question = {
   id: string;
   title: string;
   description: string;
-  points?: number;
-  difficulty?: "EASY" | "MEDIUM" | "HARD";
+  points: number;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
   is_solved: boolean;
   have_machine: boolean;
+  image_url: string | null;
 };
 
 type InstanceStatus = {
@@ -272,6 +273,11 @@ export default function QuestionPage() {
           <CardBody className="space-y-6">
             <div>
               <h3 className="text-sm font-bold text-[color:var(--muted)] uppercase mb-2">Description</h3>
+              {question.image_url ? (
+                <div className="mb-4">
+                  <img src={question.image_url} className="max-w-full rounded" />
+                </div>
+              ) : null}
               <p className="text-[color:var(--text)]/90 leading-relaxed whitespace-pre-wrap">
                 {question.description || "No description provided."}
               </p>
