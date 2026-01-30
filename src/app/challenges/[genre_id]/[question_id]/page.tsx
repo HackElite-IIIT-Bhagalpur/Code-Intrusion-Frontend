@@ -17,6 +17,7 @@ type Question = {
   points?: number;
   difficulty?: "EASY" | "MEDIUM" | "HARD";
   is_solved: boolean;
+  have_machine: boolean;
 };
 
 type InstanceStatus = {
@@ -96,7 +97,7 @@ export default function QuestionPage() {
     },
   });
 
-  const startInstanceMutation = useMutation<{ status: string; public_ip: string | null; reused: boolean; message: string }, Error, void>({
+  const startInstanceMutation = useMutation<{ status: string; public_ip: string | null; reused: boolean; message: string }, any, void>({
     mutationFn: async () => {
       if (!question_id) throw new Error("Missing question id");
       const res = await api.patch(`/ec2/start/${question_id}`);
@@ -111,8 +112,12 @@ export default function QuestionPage() {
       }
       queryClient.invalidateQueries({ queryKey: ["ec2-instance", question_id] });
     },
-    onError: () => {
-      setFeedback("Failed to start machine.");
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to start machine.";
+      setFeedback(message);
     },
   });
 
@@ -272,7 +277,7 @@ export default function QuestionPage() {
               </p>
             </div>
 
-            <div className="mt-4 space-y-3">
+            {question.have_machine ? <div className="mt-4 space-y-3">
               <h3 className="text-sm font-bold text-[color:var(--muted)] uppercase mb-2">Machine</h3>
               {isInstanceLoading ? (
                 <p className="text-[color:var(--muted)] text-sm">Checking machine status...</p>
@@ -329,7 +334,7 @@ export default function QuestionPage() {
                   )}
                 </div>
               )}
-            </div>
+            </div> : null}
 
             {!question.is_solved && (
               <div className="mt-8 pt-6 border-t border-[color:var(--border)] space-y-4">
