@@ -112,22 +112,6 @@ export default function LoginPage() {
                 })}
               />
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-[color:var(--muted)]">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 text-[color:var(--primary)] border-[color:var(--border)] rounded focus:ring-[color:var(--primary)]"
-                  />
-                  <span>Remember me</span>
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-[color:var(--primary)] hover:text-white font-medium"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
               <Button
                 type="submit"
                 className="w-full"
@@ -142,7 +126,7 @@ export default function LoginPage() {
             <div className="mt-6 text-center text-sm text-[color:var(--muted)]">
               Don't have an account?{" "}
               <Link
-                href="/"
+                href="/contact"
                 className="text-[color:var(--primary)] hover:text-white font-medium"
               >
                 Contact Admin
