@@ -35,26 +35,12 @@ export default function Navbar() {
             href="/"
             className="flex items-center space-x-2 text-xl font-bold text-[color:var(--text)] hover:text-[color:var(--primary)] transition-colors"
           >
-            <svg
-              className="w-8 h-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 3 4 7v6c0 4.5 3.2 8.7 8 10 4.8-1.3 8-5.5 8-10V7l-8-4Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="text-[color:var(--primary)]"
-              />
-              <path
-                d="M8.5 12 12 9l3.5 3-3.5 3-3.5-3Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="text-[color:var(--secondary)]"
-              />
-            </svg>
-            <span>CTF Platform</span>
+            <img
+              src="/facvicon.ico"
+              alt="CTF logo"
+              className="h-12 rounded-full"
+            />
+            <span> HackElite</span>
           </Link>
 
           {/* Navigation Links */}
